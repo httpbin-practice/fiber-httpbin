@@ -2,6 +2,13 @@ package main
 
 import "github.com/gofiber/fiber/v2"
 
+type BaseResp struct {
+	Args    map[string]interface{} `json:"args"`
+	Headers map[string]string      `json:"headers"`
+	Origin  string                 `json:"origin"`
+	URL     string                 `json:"url"`
+}
+
 func main() {
 	app := fiber.New()
 
