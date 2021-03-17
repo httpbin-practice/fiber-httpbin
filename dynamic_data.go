@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// GetBase64Value decode base64 value
 func GetBase64Value(c *fiber.Ctx) error {
 	respText := "Incorrect Base64 data try: SFRUUEJJTiBpcyBhd2Vzb21l"
 	result, err := base64.StdEncoding.DecodeString(c.Params("value"))
@@ -16,6 +17,7 @@ func GetBase64Value(c *fiber.Ctx) error {
 	return c.SendString(respText)
 }
 
+// GetBytesN x
 func GetBytesN(c *fiber.Ctx) error {
 	return c.SendString("send get bytes N")
 }

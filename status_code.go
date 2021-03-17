@@ -3,21 +3,25 @@ package main
 import "github.com/gofiber/fiber/v2"
 
 func DeleteStatus(c *fiber.Ctx) error {
-	return c.SendString("delete status")
+	return c.SendString(c.Params("codes"))
 }
 
 func GetStatus(c *fiber.Ctx) error {
-	return c.SendString("get status")
+	return c.SendString(c.Params("codes"))
+
 }
 
 func PatchStatus(c *fiber.Ctx) error {
-	return c.SendString("patch status")
+	return c.SendString(c.Params("codes"))
+
 }
 
 func PostStatus(c *fiber.Ctx) error {
-	return c.SendString("post status")
+	return c.SendString(c.Params("codes"))
+
 }
 
 func PutStatus(c *fiber.Ctx) error {
-	return c.SendString("put status")
+	return c.SendString(c.Params("codes"))
+
 }

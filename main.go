@@ -1,6 +1,14 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"log"
+	"strings"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/basicauth"
+	"github.com/gofiber/fiber/v2/middleware/etag"
+	"github.com/gofiber/fiber/v2/middleware/favicon"
+)
 
 type BaseResp struct {
 	Args    map[string]interface{} `json:"args"`
@@ -11,7 +19,28 @@ type BaseResp struct {
 }
 
 func main() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		Prefork:               false,
+		CaseSensitive:         false,
+		DisableStartupMessage: false,
+		ServerHeader:          "Fiber-httpbin",
+	})
+	app.Use(favicon.New(favicon.Config{
+		File: "static/favicon.ico",
+	}))
+	app.Use(etag.New())
+
+	app.Use(basicauth.New(basicauth.Config{
+		Users: map[string]string{
+			"TaceyWong": "123",
+		},
+		Next: func(c *fiber.Ctx) bool {
+			if strings.HasPrefix(c.OriginalURL(), "/basic-auth") {
+				return false
+			}
+			return true
+		},
+	}))
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Fiber httpbin 👋!")
@@ -38,12 +67,12 @@ func main() {
 
 	// redirects
 	app.Get("/absolute-redirect/:n", GetAbsoluteRedirect)
-	app.Delete("/redirect-to", DeleteRedirectTo)
-	app.Get("/redirect-to", GetRedirectTo)
-	app.Post("/redirect-to", PostRedirectTo)
-	app.Patch("/redirect-to", PatchRedirectTo)
-	app.Put("/redirect-to", PutRedirectTo)
-	app.Get("/redirect/:n", GetRedirect)
+	app.Delete("/redirect-to", RedirectTo)
+	app.Get("/redirect-to", RedirectTo)
+	app.Post("/redirect-to", RedirectTo)
+	app.Patch("/redirect-to", RedirectTo)
+	app.Put("/redirect-to", RedirectTo)
+	app.Get("/redirect/:n", RedirectTo)
 	app.Get("/relative-redirect/:n", GetRelativeRedirect)
 
 	// images
@@ -118,6 +147,6 @@ func main() {
 	app.Get("/digest-auth/:qop/:user/:passwd/:algorithm", GetDigestAuthA)
 	app.Get("/digest-auth/:qop/:user/:passwd/:algorithm/:stale_after", GetDigestAuthAS)
 	app.Get("/hiden-basic-auth/:user/:passwd", GetHidenBasicAuth)
-
-	app.Listen(":3000")
+	log.Printf("Start at ：3000")
+	log.Fatal(app.Listen(":3000"))
 }

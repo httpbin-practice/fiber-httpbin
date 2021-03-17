@@ -15,9 +15,17 @@ func GetRespEtag(c *fiber.Ctx) error {
 }
 
 func GetRespHeaders(c *fiber.Ctx) error {
-	return c.SendString("get resp headers")
+	headerMap := map[string]string{}
+	c.Response().Header.VisitAll(func(k []byte, v []byte) {
+		headerMap[string(k)] = string(v)
+	})
+	return c.JSON(headerMap)
 }
 
 func PostRespHeaders(c *fiber.Ctx) error {
-	return c.SendString("post resp headers")
+	headerMap := map[string]string{}
+	c.Response().Header.VisitAll(func(k []byte, v []byte) {
+		headerMap[string(k)] = string(v)
+	})
+	return c.JSON(headerMap)
 }
