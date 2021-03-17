@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 func GetBase64Value(c *fiber.Ctx) error {
@@ -58,5 +59,6 @@ func GetStream(c *fiber.Ctx) error {
 }
 
 func GetUUID(c *fiber.Ctx) error {
-	return c.SendString("get uuid")
+	u, _ := uuid.NewUUID()
+	return c.JSON(map[string]string{"uuid": u.String()})
 }
