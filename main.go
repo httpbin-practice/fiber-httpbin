@@ -7,6 +7,7 @@ type BaseResp struct {
 	Headers map[string]string      `json:"headers"`
 	Origin  string                 `json:"origin"`
 	URL     string                 `json:"url"`
+	Method  string                 `json:"method"`
 }
 
 func main() {

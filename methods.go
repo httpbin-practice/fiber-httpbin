@@ -7,10 +7,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetMethod(c *fiber.Ctx) error {
+func GetRespContent(c *fiber.Ctx)BaseResp{
 	resp := BaseResp{}
+	resp.Method = c.Method()
 	resp.Origin = c.IP()
-	resp.URL = c.OriginalURL()
+	resp.URL = c.Context().URI().String()
 	args := c.Context().QueryArgs().String()
 	headers := c.Request().Header.String()
 	querys, _ := url.ParseQuery(args)
@@ -28,21 +29,26 @@ func GetMethod(c *fiber.Ctx) error {
 		}
 		resp.Headers[headerPair[0]] = strings.Trim(headerPair[1], " ")
 	}
-	return c.JSON(resp)
+	return resp
+}
+
+
+func GetMethod(c *fiber.Ctx) error {
+	return c.JSON(GetRespContent(c))
 }
 
 func PostMethod(c *fiber.Ctx) error {
-	return c.SendString("post methods!")
+	return c.JSON(GetRespContent(c))
 }
 
 func PutMethod(c *fiber.Ctx) error {
-	return c.SendString("put methods!")
+	return c.JSON(GetRespContent(c))
 }
 
 func PatchMethod(c *fiber.Ctx) error {
-	return c.SendString("patch methods!")
+	return c.JSON(GetRespContent(c))
 }
 
 func DeleteMethod(c *fiber.Ctx) error {
-	return c.SendString("delete methods!")
+	return c.JSON(GetRespContent(c))
 }
