@@ -1,9 +1,18 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"encoding/base64"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func GetBase64Value(c *fiber.Ctx) error {
-	return c.SendString("send get base64 value")
+	respText := "Incorrect Base64 data try: SFRUUEJJTiBpcyBhd2Vzb21l"
+	result, err := base64.StdEncoding.DecodeString(c.Params("value"))
+	if err == nil {
+		respText = string(result)
+	}
+	return c.SendString(respText)
 }
 
 func GetBytesN(c *fiber.Ctx) error {
@@ -48,6 +57,6 @@ func GetStream(c *fiber.Ctx) error {
 	return c.SendString("get stream ")
 }
 
-func GetUUID(c *fiber.Ctx)error{
+func GetUUID(c *fiber.Ctx) error {
 	return c.SendString("get uuid")
 }
