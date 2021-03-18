@@ -5,7 +5,11 @@ import (
 )
 
 func GetHeaders(c *fiber.Ctx) error {
-	return c.SendString("get headers")
+	headers := map[string]string{}
+	c.Request().Header.VisitAll(func(k, v []byte) {
+		headers[string(k)] = string(v)
+	})
+	return c.JSON(map[string]interface{}{"headers": headers})
 }
 
 func GetIP(c *fiber.Ctx) error {
