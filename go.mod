@@ -6,4 +6,5 @@ require (
 	github.com/gofiber/fiber/v2 v2.6.0
 	github.com/google/uuid v1.2.0
 	github.com/gophercloud/gophercloud v0.16.0
+	github.com/valyala/fasthttp v1.18.0
 )

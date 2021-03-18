@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/favicon"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 type BaseResp struct {
@@ -29,6 +30,10 @@ func main() {
 		File: "static/favicon.ico",
 	}))
 	app.Use(etag.New())
+	app.Use(logger.New(logger.Config{
+		TimeZone:   "Asia/Shanghai",
+		TimeFormat: "2006年01月02日15点04分05秒",
+	}))
 
 	app.Use(basicauth.New(basicauth.Config{
 		Users: map[string]string{
@@ -94,11 +99,11 @@ func main() {
 
 	app.Get("/base64/:value", GetBase64Value)
 	app.Get("/bytes/:n", GetBytesN)
-	app.Delete("/delay/:delay", DeleteDelay)
-	app.Get("/delay/:delay", GetDelay)
-	app.Post("/delay/:delay", PostDelay)
-	app.Patch("/delay/:delay", PatchDelay)
-	app.Put("/delay/:delay", PutDelay)
+	app.Delete("/delay/:delay", Delay)
+	app.Get("/delay/:delay", Delay)
+	app.Post("/delay/:delay", Delay)
+	app.Patch("/delay/:delay", Delay)
+	app.Put("/delay/:delay", Delay)
 	app.Get("/drip", GetDrip)
 	app.Get("/links/:n/:offset", GetLinks)
 	app.Get("/range", GetRange)

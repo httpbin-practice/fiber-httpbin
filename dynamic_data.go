@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/base64"
+	"strconv"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -19,29 +21,31 @@ func GetBase64Value(c *fiber.Ctx) error {
 
 // GetBytesN x
 func GetBytesN(c *fiber.Ctx) error {
+	// n, err := strconv.Atoi(c.Params("n"))
+	// if err != nil {
+	// 	return err
+	// }
 	return c.SendString("send get bytes N")
 }
 
-func GetDelay(c *fiber.Ctx) error {
-	return c.SendString("get delay")
-}
-
-func DeleteDelay(c *fiber.Ctx) error {
-	return c.SendString("delete delay")
-}
-
-func PostDelay(c *fiber.Ctx) error {
-	return c.SendString("post delay")
-}
-func PatchDelay(c *fiber.Ctx) error {
-	return c.SendString("patch delay")
-}
-func PutDelay(c *fiber.Ctx) error {
-	return c.SendString("put delay")
+func Delay(c *fiber.Ctx) error {
+	n, err := strconv.Atoi(c.Params("delay"))
+	if err != nil {
+		return err
+	}
+	time.Sleep(time.Duration(n) * time.Second)
+	return c.JSON(GetRespContent(c))
 }
 
 func GetDrip(c *fiber.Ctx) error {
-	return c.SendString("get drip")
+	if c.Request().Header.Peek("If-Modified-Since") != nil || c.Request().Header.Peek("If-None-Match") != nil {
+		resp := GetRespContent(c)
+		c.Response().Header.Set("Last-Modified", "http-date")
+		c.Response().Header.Set("ETag", "uuid")
+		return c.JSON(resp)
+	}
+	c.Response().SetStatusCode(304)
+	return c.Send(nil)
 }
 
 func GetLinks(c *fiber.Ctx) error {
